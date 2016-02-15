@@ -365,7 +365,7 @@ fluid_midi_file_read_track(fluid_midi_file *mf, fluid_player_t *player, int num)
             }
 
             while (!fluid_midi_file_eot(mf)) {
-                if (fluid_midi_file_read_event(mf, track) != FLUID_OK) {
+                if (fluid_midi_file_read_event(mf, track, num) != FLUID_OK) {
                     delete_fluid_track(track);
                     return FLUID_FAILED;
                 }
@@ -430,7 +430,7 @@ fluid_midi_file_read_varlen(fluid_midi_file *mf)
  * fluid_midi_file_read_event
  */
 int
-fluid_midi_file_read_event(fluid_midi_file *mf, fluid_track_t *track)
+fluid_midi_file_read_event(fluid_midi_file *mf, fluid_track_t *track, int num)
 {
     int status;
     int type;
@@ -746,6 +746,7 @@ fluid_midi_file_read_event(fluid_midi_file *mf, fluid_track_t *track)
         evt->channel = channel;
         evt->param1 = param1;
         evt->param2 = param2;
+        evt->track = num;
         fluid_track_add_event(track, evt);
         mf->dtime = 0;
     }
@@ -1389,20 +1390,20 @@ fluid_player_get_track(fluid_player_t *player, int i)
 }
 
 /**
- * Change the MIDI callback function. This is usually set to 
+ * Change the MIDI callback function. This is usually set to
  * fluid_synth_handle_midi_event, but can optionally be changed
  * to a user-defined function instead, for intercepting all MIDI
- * messages sent to the synth. You can also use a midi router as 
+ * messages sent to the synth. You can also use a midi router as
  * the callback function to modify the MIDI messages before sending
- * them to the synth. 
+ * them to the synth.
  * @param player MIDI player instance
  * @param handler Pointer to callback function
  * @param handler_data Parameter sent to the callback function
  * @returns FLUID_OK
  * @since 1.1.4
  */
-int 
-fluid_player_set_playback_callback(fluid_player_t* player, 
+int
+fluid_player_set_playback_callback(fluid_player_t* player,
     handle_midi_event_func_t handler, void* handler_data)
 {
     player->playback_callback = handler;
@@ -1709,13 +1710,13 @@ fluid_player_get_status(fluid_player_t *player)
 }
 
 /**
- * Enable looping of a MIDI player 
+ * Enable looping of a MIDI player
  * @param player MIDI player instance
  * @param loop Times left to loop the playlist. -1 means loop infinitely.
  * @return Always returns #FLUID_OK
  * @since 1.1.0
  *
- * For example, if you want to loop the playlist twice, set loop to 2 
+ * For example, if you want to loop the playlist twice, set loop to 2
  * and call this function before you start the player.
  */
 int fluid_player_set_loop(fluid_player_t *player, int loop)

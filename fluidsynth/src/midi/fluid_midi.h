@@ -192,7 +192,7 @@ enum midi_sysex_tuning_msg_id {
   MIDI_SYSEX_TUNING_BULK_DUMP_REQ_BANK  = 0x03, /**< Bulk tuning dump request (with bank, non-realtime) */
   MIDI_SYSEX_TUNING_BULK_DUMP_BANK      = 0x04, /**< Bulk tuning dump resonse (with bank, non-realtime) */
   MIDI_SYSEX_TUNING_OCTAVE_DUMP_1BYTE   = 0x05, /**< Octave tuning dump using 1 byte values (non-realtime) */
-  MIDI_SYSEX_TUNING_OCTAVE_DUMP_2BYTE   = 0x06, /**< Octave tuning dump using 2 byte values (non-realtime) */ 
+  MIDI_SYSEX_TUNING_OCTAVE_DUMP_2BYTE   = 0x06, /**< Octave tuning dump using 2 byte values (non-realtime) */
   MIDI_SYSEX_TUNING_NOTE_TUNE_BANK      = 0x07, /**< Tuning note change message (with bank, realtime/non-realtime) */
   MIDI_SYSEX_TUNING_OCTAVE_TUNE_1BYTE   = 0x08, /**< Octave tuning message using 1 byte values (realtime/non-realtime) */
   MIDI_SYSEX_TUNING_OCTAVE_TUNE_2BYTE   = 0x09  /**< Octave tuning message using 2 byte values (realtime/non-realtime) */
@@ -228,6 +228,7 @@ struct _fluid_midi_event_t {
   unsigned int dtime;       /* Delay (ticks) between this and previous event. midi tracks. */
   unsigned int param1;      /* First parameter */
   unsigned int param2;      /* Second parameter */
+  unsigned int track;       /* Original track number */
   unsigned char type;       /* MIDI event type */
   unsigned char channel;    /* MIDI channel */
 };
@@ -349,7 +350,7 @@ void delete_fluid_midi_file(fluid_midi_file* mf);
 int fluid_midi_file_read_mthd(fluid_midi_file* midifile);
 int fluid_midi_file_load_tracks(fluid_midi_file* midifile, fluid_player_t* player);
 int fluid_midi_file_read_track(fluid_midi_file* mf, fluid_player_t* player, int num);
-int fluid_midi_file_read_event(fluid_midi_file* mf, fluid_track_t* track);
+int fluid_midi_file_read_event(fluid_midi_file* mf, fluid_track_t* track, int num);
 int fluid_midi_file_read_varlen(fluid_midi_file* mf);
 int fluid_midi_file_getc(fluid_midi_file* mf);
 int fluid_midi_file_push(fluid_midi_file* mf, int c);
